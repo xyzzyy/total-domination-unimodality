@@ -36,7 +36,7 @@
   #align(center)[*Abstract*]
   #v(0.35em)
   #set par(first-line-indent: (amount: 1.5em, all: true))
-  The total domination polynomial $D_t (G,x) = sum_(k=0)^n d_t (G,k) x^k$ of a finite graph $G$ without isolated vertices counts its total dominating sets by cardinality. Alikhani and Jafari conjectured in 2016 that $D_t (G,x)$ is unimodal for every such graph. We construct connected bipartite graphs whose total domination polynomials fail to be unimodal. An elementary analytic argument exhibits a counterexample on 4,094,226,002 vertices whose valley coefficient lies more than $2^68$ times below two surrounding coefficients; the non-unimodality of this graph is formally verified in Lean 4 without external axioms. Exact transfer-matrix computations give two smaller counterexamples on 22,601 and 25,423 vertices, each strictly bimodal on its support.
+  The total domination polynomial $D_t (G,x) = sum_(k=0)^n d_t (G,k) x^k$ of a finite graph $G$ without isolated vertices counts its total dominating sets by cardinality. Alikhani and Jafari conjectured in 2016 that $D_t (G,x)$ is unimodal for every such graph. We construct connected bipartite graphs whose total domination polynomials fail to be unimodal. An elementary analytic argument exhibits a counterexample on 4,094,226,002 vertices whose valley coefficient is smaller than two surrounding coefficients by a factor exceeding $2^68$; the non-unimodality of this graph is formally verified in Lean 4 using only its standard axioms. Exact transfer-matrix computations give two smaller counterexamples on 22,601 and 25,423 vertices, each strictly bimodal on its support.
 ]
 
 #v(1.5em)
@@ -61,7 +61,7 @@ In this note we construct a family of connected bipartite graphs whose total dom
   There exist connected bipartite graphs $G_1$ and $G_2$ on $22 thin 601$ and $25 thin 423$ vertices, respectively, satisfying
   $ d_t (G_1, 11 thin 843) > d_t (G_1, 11 thin 858) < d_t (G_1, 11 thin 888),
     quad d_t (G_2, 13 thin 299) > d_t (G_2, 13 thin 356) < d_t (G_2, 13 thin 380). $
-  Each coefficient sequence has support $[Q+1, n]$ (with $Q=969$ for $G_1$ and $Q=1090$ for $G_2$), has no equal adjacent nonzero entries, and is strictly bimodal with its unique local maxima at the outer indices above.
+  Each coefficient sequence has support $[Q+1, n]$ (with $Q=969$ for $G_1$ and $Q=1090$ for $G_2$), has no equal adjacent nonzero entries, and is strictly bimodal with its only local maxima at the outer indices above.
 ]
 
 = Construction <sec-construction>
@@ -95,7 +95,7 @@ Conversely, suppose $h in S$ and $X$ is valid. Then $h$ dominates $ell$ and ever
   The graph $G_(w,d)(m,p; bold(q))$ is simple, connected, and bipartite, and has no isolated vertices.
 ] <lem-graph>
 
-#proof Every edge joins a vertex in ${h} union {"clause vertices"}$ to a vertex in ${ell} union Vvar$, so the graph is bipartite. No edge is repeated and no loop is formed because all clause vertices are distinct and each is joined to two distinct variable vertices ($B_(i,b)$ is disjoint from all $A$- and $Z$-vertices). Every vertex in ${ell} union Vvar$ is adjacent to $h$, and every clause vertex is adjacent to some $B_(i,b)$ and thus lies at distance two from $h$; hence $G$ is connected and has minimum degree at least one. #qed
+#proof Every edge joins a vertex in ${h} union {"clause vertices"}$ to a vertex in ${ell} union Vvar$, so the graph is bipartite. No edge is repeated and no loop is formed because all clause vertices are distinct and each is joined to two distinct variable vertices ($B_(i,b)$ is distinct from every $A$- and $Z$-vertex). Every vertex in ${ell} union Vvar$ is adjacent to $h$, and every clause vertex is adjacent to some $B_(i,b)$ and thus lies at distance two from $h$; hence $G$ is connected and has minimum degree at least one. #qed
 
 #block(breakable: false, above: 0.75em)[
   By @lem-tds, summing over all subsets of free vertices and all valid variable subsets yields the factorization
@@ -150,7 +150,7 @@ For any valid set $X subset.eq Vvar$, define a cyclic binary word $tau in {0,1}^
 #proof Fix a cyclic word $tau in {0,1}^(ZZ_m)$. In block $j$, the pairs $(B_(j,b), Z_(j,b))$ admit $2^q$ choices when $tau_j = 0$ (all $B_(j,b)$ present, each $Z_(j,b)$ optional) and $3^q - 2^q <= 3^q$ choices when $tau_j = 1$. Meanwhile, the $A$ vertices of block $j$ are forced into $X$ whenever any of $tau_j$, $tau_(j+1)$, or $tau_(j+2)$ equals $1$. Relaxing the constraint from $tau_(j+2)$ for an upper bound leaves at most $2^p$ choices for block $A_j$ when $tau_j = tau_(j+1) = 0$, and a single choice otherwise. Multiplying across blocks, the number of valid sets $X$ with word $tau$ is at most $product_(j in ZZ_m) W_(tau_j, tau_(j+1))$, where
 $ W = mat(2^(p+q), 2^q; 3^q, 3^q). $
 
-Each $X in fam(I I I)$ admits at least one position $i in ZZ_m$ with $(tau_i, tau_(i+1)) = (0,1)$. Fixing $i$ and summing the product of transition weights over all words of length $m-1$ starting at $tau_(i+1) = 1$ and returning to $tau_i = 0$ contributes $W_(0,1) (W^(m-1))_(1,0) = 2^q (W^(m-1))_(1,0)$. Summing over the $m$ choices of $i$ gives
+Each $X in fam(I I I)$ admits at least one position $i in ZZ_m$ with $(tau_i, tau_(i+1)) = (0,1)$. Fixing $i$ and summing the product of transition weights over all $(m-1)$-step walks from $tau_(i+1) = 1$ to $tau_i = 0$ contributes $W_(0,1) (W^(m-1))_(1,0) = 2^q (W^(m-1))_(1,0)$. Summing over the $m$ choices of $i$ gives
 $ |fam(I I I)| <= m dot 2^q (W^(m-1))_(1,0). $
 
 Now set $v = (1, L)^(top)$. By hypothesis,
@@ -173,14 +173,14 @@ $ (2^(p+q) + 2^q L) L = 2^587 + 2^395 < 2^587 + 2^569 = 2^569 (1 + 2^18) < 3^359
     align: (left, left, right),
     inset: (x: 7pt, y: 6pt),
     stroke: (x, y) => (bottom: if y == 0 { 0.7pt } else { 0.35pt + luma(205) }),
-    table.header([*Quantity*], [*Logarithmic expression*], [*Offset from* $N_1$]),
-    [$lg_2 B_1$], [$N_1 - lg_2(N_1 + 1)$], [$-31.929$],
-    [$lg_2 B_3$], [$C + Q lg_2 3 - lg_2(C + 1) - lg_2(Q + 1)$], [$-26.869$],
-    [$lg_2 U_1$], [$N_1 lg_2(1 + t) - j_1 lg_2 t$], [$-102.462$],
-    [$lg_2 U_2$], [$C lg_2(alpha + beta) + Q lg_2(alpha(alpha + 2beta))$ \ $quad - s lg_2 alpha - (C + 2Q - s) lg_2 beta$], [$-104.193$],
-    [$lg_2 U_3$], [$C + lg_2 m + q + 18$ \ $quad + (m - 1)(q lg_2 3 + lg_2(1 + 2^(-18)))$], [$-150.087$],
+    table.header([*Bound*], [*Logarithmic expression*], [*Offset from* $N_1$]),
+    [$lg_2 B_1 =$], [$N_1 - lg_2(N_1 + 1)$], [$-31.929$],
+    [$lg_2 B_3 =$], [$C + Q lg_2 3 - lg_2(C + 1) - lg_2(Q + 1)$], [$-26.869$],
+    [$lg_2 U_1 <=$], [$N_1 lg_2(1 + t) - j_1 lg_2 t$], [$-102.462$],
+    [$lg_2 U_2 <=$], [$C lg_2(alpha + beta) + Q lg_2(alpha(alpha + 2beta))$ \ $quad - s lg_2 alpha - (C + 2Q - s) lg_2 beta$], [$-104.193$],
+    [$lg_2 U_3 <=$], [$C + lg_2 m + q + 18$ \ $quad + (m - 1)(q lg_2 3 + lg_2(1 + 2^(-18)))$], [$-150.087$],
   ),
-  caption: [Logarithmic forms of the peak lower bounds $B_1, B_3$ and valley upper bounds $U_1, U_2, U_3$, together with their offsets from $N_1$ rounded to three decimal places. Here $t = 2676/2675$ and $(alpha, beta) = (2374, 2375)$.],
+  caption: [Logarithmic forms of the peak lower bounds $B_1, B_3$ and upper bounds for $U_1, U_2, U_3$, together with their offsets from $N_1$ rounded to three decimal places. Here $t = 2676/2675$ and $(alpha, beta) = (2374, 2375)$.],
 ) <tab-margins>
 
 To certify the numerical comparisons in @tab-margins without relying on floating-point rounding, write any positive rational $u$ as $u = 2^a y$ with $a in ZZ$ and $1 <= y < 2$, and set $z = (y-1)/(y+1) in [0, 1/3)$. From the identity $ln y = ln((1+z)/(1-z)) = 2 sum_(j=0)^infinity z^(2j+1)/(2j+1)$, truncating after $j = 23$ and bounding the tail by a geometric series gives $S(z) <= ln y <= S(z) + R(z)$, where
@@ -277,7 +277,7 @@ The proof mirrors Section 3 across eight modules: `Basic` (list counting, biject
 
 Rather than evaluating logarithms, the `Numerics` module certifies the valley purely in exact `Nat` arithmetic using elementary Bernoulli and geometric bounds; for arithmetic convenience with exact integer multiples of $m$, it targets the nearby valley index $k_2 = 2 thin 050 thin 722 thin 001$ (between the same outer indices $k_1$ and $k_3$ on the same graph $G(18000, 210, 359)$). Checking `#print axioms alikhani_jafari_false` confirms that the proof depends only on Lean’s three standard foundational axioms (`propext`, `Classical.choice`, and `Quot.sound`), with no `sorry` and no `native_decide` trust assumptions.
 
-A companion interface in Mathlib v4.14.0 (`AlikhaniJafariMathlib.lean`) bridges this core theorem to standard Mathlib definitions: `SimpleGraph`, `SimpleGraph.Connected`, `SimpleGraph.Colorable 2`, finite-subset counting over `Finset`, and `Polynomial ℕ`, proving directly that there is no mode $m in NN$ for which the coefficient function is `MonotoneOn` on $(-infinity, m]$ and `AntitoneOn` on $[m, infinity)$.
+A companion interface in Mathlib v4.14.0 (`AlikhaniJafariMathlib.lean`) bridges this core theorem to standard Mathlib definitions: `SimpleGraph`, `SimpleGraph.Connected`, `SimpleGraph.Colorable 2`, finite-subset counting over `Finset`, and `Polynomial ℕ`, proving directly that there is no mode $m in NN$ for which the coefficient function is `MonotoneOn` on ${0, dots, m}$ and `AntitoneOn` on ${m, m+1, dots}$.
 
 = Concluding remarks and open questions
 
