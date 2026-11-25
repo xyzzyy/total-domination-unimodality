@@ -112,7 +112,7 @@ Fix $G = G(m,p,q)$ with $m >= 3$ and $3 divides Q$, and set $N_1 = C + P + Q$. W
 - $fam(I I)$ consists of all valid sets containing every $A$ vertex;
 - $fam(I I I)$ consists of all remaining valid sets (those omitting at least one $B$ vertex and at least one $A$ vertex).
 
-Notice that $fam(I)$ and $fam(I I)$ are not disjoint (their intersection contains valid sets with all $A$ and all $B$ vertices), which works in our favor for both lower and upper bounds.
+Notice that $fam(I)$ and $fam(I I)$ overlap (their intersection contains valid sets with all $A$ and all $B$ vertices); each family individually yields a lower bound, while summing all three contributions yields an upper bound.
 
 Within $fam(I)$, every clause vertex is already dominated by its $B$ neighbor, so all $P$ vertices of type $A$ and all $Q$ vertices of type $Z$ are unconstrained; together with the hub and $C$ free vertices, $fam(I)$ contributes $x^(1+Q)(1+x)^(N_1)$ to $D_t (G,x)$. Within $fam(I I)$, every coupling clause $c_(i,b,s,a)$ is already dominated by its $A$ neighbor, leaving only the private clauses $z_(i,b)$, which allow three choices for each pair $(B_(i,b), Z_(i,b))$: two of size one and one of size two. Thus $fam(I I)$ contributes $x^(1+P+Q)(1+x)^C (2+x)^Q$ to $D_t (G,x)$.
 
@@ -134,7 +134,7 @@ The final inequality holds because every valid variable set in $fam(I I I)$ has 
 
 #proof Every term in the sum $f(t) = sum_(r >= 0) f_r t^r$ is nonnegative, so $f_a t^a <= f(t)$. #qed
 
-Applying @lem-coeff to $(1+x)^(N_1)$ at $t = (T+1)/T$ with $T = 2675$ (close to the minimizer $j_1 / (N_1 - j_1)$), and to $(1+x)^C (x(2+x))^Q$ at $x = alpha / beta$ with $(alpha, beta) = (2374, 2375)$, gives
+Applying @lem-coeff to $(1+x)^(N_1)$ at $t = (T+1)/T$ with $T = 2675$ (close to the minimizer $j_1 / (N_1 - j_1)$ for the parameters in Section 3.3), and to $(1+x)^C (x(2+x))^Q$ at $x = alpha / beta$ with $(alpha, beta) = (2374, 2375)$, gives
 $ U_1 <= (1+t)^(N_1)/t^(j_1), quad
   U_2 dot alpha^s beta^(C + 2Q - s) <= (alpha + beta)^C (alpha(alpha + 2beta))^Q. $ <eq-chernoff>
 
@@ -195,7 +195,7 @@ Combining this with @lem-graph proves Theorem A. #qed
 
 == Intuition: why two competing phases produce a valley
 
-The mechanism behind Theorem A is probabilistic. Families $fam(I)$ and $fam(I I)$ have total masses $2^C 2^(P+Q)$ and $2^C 3^Q$, whose per-block growth rates $2^(p+q)$ and $3^q$ stay closely balanced whenever $p/q approx lg_2(3/2) approx 0.58496$. Choosing the rational approximation $p/q = 210/359$ leaves an imbalance of only $q lg_2 3 - (p+q) approx 0.001538$ bits per block—about $27.7$ bits across the entire ring.
+The mechanism behind Theorem A is probabilistic. Families $fam(I)$ and $fam(I I)$ have total masses $2^C 2^(P+Q)$ and $2^C 3^Q$, with per-block growth-rate ratio $3^q slash 2^(p+q) = 2^(q(lg_2(3/2) - p/q))$. Choosing the rational approximation $p/q = 210/359$ leaves an imbalance of only $q lg_2 3 - (p+q) approx 0.001538$ bits per block—about $27.7$ bits across the entire ring.
 
 Conditioned on its variable subset lying in $fam(I)$ or $fam(I I)$, the cardinality of a uniformly random total dominating set is distributed as
 $ 1 + Q + "Bin"(N_1, 1/2)
@@ -240,7 +240,7 @@ Taking the trace sums over all cyclic state sequences whose ending state equals 
     [Turning points $(k_1, k_2, k_3)$], [$(11 thin 843, 11 thin 858, 11 thin 888)$], [$(13 thin 299, 13 thin 356, 13 thin 380)$],
     [$d_t (G, k_1) slash d_t (G, k_2)$], [1.000236], [1.014411],
     [$d_t (G, k_3) slash d_t (G, k_2)$], [1.001533], [1.001448],
-    [Decimal digits per coefficient], [6,510], [7,323],
+    [Decimal digits at turning points], [6,510], [7,323],
   ),
   caption: [Parameters and exact valley statistics for the graphs $G_1$ and $G_2$ of Theorem B. Ratios are rounded to six decimal places.],
 ) <tab-small>
@@ -250,9 +250,9 @@ Taking the trace sums over all cyclic state sequences whose ending state equals 
   caption: [Exact total domination coefficients near the valleys of $G_1$ (left) and $G_2$ (right), normalized by the valley value $d_t (G, k_2)$. Note the different vertical scales.],
 ) <fig-valleys>
 
-Because the coefficients at $(k_1, k_2, k_3)$ have 6,510 and 7,323 decimal digits, we verified Theorem B through three independent exact computational pipelines:
+Because the coefficients at $(k_1, k_2, k_3)$ have 6,510 and 7,323 decimal digits, we verified Theorem B by dual exact FLINT computations of both full polynomials and cross-checked the six turning-point coefficients via two independent exact pipelines:
 
-+ *Dual exact transfer recurrences in FLINT.* Using exact integer polynomial arithmetic via `python-flint` @FLINT, we compute $H(x)$ both by the forward recurrence of @lem-transfer (with states $w-1$ and $w$ merged) and by an independent backward recurrence tracking how many upcoming $A$-blocks are forced full by previously omitted $B$-vertices (multiplied via divide-and-conquer). Both recurrences match exhaustive $2^n$ subset enumeration on small test graphs and agree identically on $H(x)$ for $G_1$ and $G_2$. Expanding the full product $D_t (G,x) = x(1+x)^C H(x)$ confirms that each polynomial has support $[Q+1, n]$, has no equal adjacent nonzero coefficients, and changes monotonicity direction only at $(k_1, k_2, k_3)$.
++ *Dual exact transfer recurrences in FLINT.* Using exact integer polynomial arithmetic via `python-flint` @FLINT, we compute $H(x)$ both by the forward recurrence of @lem-transfer (with states $w-1$ and $w$ merged) and by an independent backward recurrence tracking how many upcoming $A$-blocks are forced full by previously omitted $B$-vertices, multiplying its transfer matrices via divide-and-conquer. Both recurrences match exhaustive $2^n$ subset enumeration on small test graphs and agree identically on $H(x)$ for $G_1$ and $G_2$. Expanding the full product $D_t (G,x) = x(1+x)^C H(x)$ confirms that each polynomial has support $[Q+1, n]$, has no equal adjacent nonzero coefficients, and changes monotonicity direction only at $(k_1, k_2, k_3)$.
 + *Independent modular NTT check.* A separate pure-Python implementation builds both graphs explicitly, checks simplicity, connectivity, bipartiteness, and absence of isolated vertices, compares evaluations of the transfer formula against exhaustive $2^n$ subset counts modulo $998 thin 244 thin 353$ on seven small instances, and evaluates the target coefficients via a number-theoretic transform modulo the two primes $998 thin 244 thin 353$ and $1 thin 004 thin 535 thin 809$, matching the exact certificates at every entry.
 + *Exact Chinese remainder reconstruction.* A third independent script (`independent_check.py`) re-verifies graph properties and tests the transfer formula against brute force on ten graphs of order at most $20$. For $G_1$ and $G_2$, it evaluates $H$ at the 4096th roots of unity modulo distinct 31-bit primes congruent to $1 mod 4096$ (756 primes for $G_1$ and 850 primes for $G_2$, whose products exceed $2^(n+64)$). Since $deg(H) = |Vvar| < 4096$, an inverse discrete Fourier transform recovers $H$ modulo each prime, binomial convolution extracts the three target coefficients via @eq-factor, and the Chinese remainder theorem reconstructs the exact integers, confirming all six coefficients and both strict valley inequalities.
 

@@ -17,7 +17,7 @@ Upper bound    d_t(k2) <= U1 + U2 + U3 with
   U1 = binom(N1, k2-1-Q)              <= (1+t)^N1 / t^(k2-1-Q),       t = (T+1)/T
   U2 = [x^s](1+x)^C (2x+x^2)^Q        <= (a+b)^C (a(a+2b))^Q / (a^s b^(C+2Q-s)),
        s = k2-1-P, (a,b) = (2374, 2375)  [Chernoff at x = a/b]
-  U3 = 2^C |III|,  |III| <= m 2^q L (Lam/L)^(m-1), Lam = 3^q (L+1), L = 2^18.
+  U3 <= 2^C |III|,  |III| <= m 2^q L (Lam/L)^(m-1), Lam = 3^q (L+1), L = 2^18.
 """
 from decimal import Decimal as D, getcontext
 import math
