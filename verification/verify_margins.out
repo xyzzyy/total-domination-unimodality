@@ -1,0 +1,20 @@
+C = 4,077,522,001  P = 3,780,000  Q = 6,462,000  N1 = 4,087,764,001  |V| = 4,094,226,002
+k1 = 2,050,344,001  k2 = 2,050,725,001  k3 = 2,051,157,001
+k3 - k1 = 813,000  (= m(3p-q)/6 = 813,000)
+q log2 3 - (p+q) = 0.001538
+transfer-matrix eigenvector conditions: OK (exact integers)
+
+log2 LB1 (k1)  >= N1 + -31.929      [exact log2 binom: N1 + -16.290]
+log2 LB3 (k3)  >= N1 + -26.869
+log2 U1        <= N1 + -102.462     [exact log2 binom: N1 + -118.753]
+log2 U2        <= N1 + -104.193
+log2 U3        <= N1 + -150.087
+
+margin  min(LB1,LB3) - U1 (family I)   =   70.534 bits   (vs LB1: 70.534, vs LB3: 75.594)
+margin  min(LB1,LB3) - U2 (family II)  =   72.264 bits   (vs LB1: 72.264, vs LB3: 77.324)
+margin  min(LB1,LB3) - U3 (mixed)      =  118.158 bits   (vs LB1: 118.158, vs LB3: 123.218)
+
+worst margin 70.53 bits > log2(3): d_t(k2) < min(d_t(k1), d_t(k3)).  NOT UNIMODAL.
+
+std dev family I ~ 31,968, family II ~ 31,950; separation k3-k1 = 813,000 ~ 25.4 sigma
+optimal Chernoff T for U1: 2681.8;  optimal x for U2 ~ 0.9995769 vs a/b = 0.9995789
