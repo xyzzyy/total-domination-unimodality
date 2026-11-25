@@ -194,7 +194,23 @@ def certify(m, p, w, d, Q, indices, output):
         raise ArithmeticError("no strict valley")
     normalization = 1 << (max(vals).bit_length() - 1)
     scaled = [v * 10**8 // normalization for v in vals]
-    peaks = [i for i in range(1, graph_order) if full[i - 1] < full[i] > full[i + 1]]
+    full_coeffs = [int(full[k]) for k in range(graph_order + 1)]
+    nz = [k for k, v in enumerate(full_coeffs) if v > 0]
+    if nz != list(range(Q + 1, graph_order + 1)):
+        raise ArithmeticError(f"unexpected support: [{nz[0]}, {nz[-1]}] (len {len(nz)})")
+    equal_adj = [k for k in range(Q + 1, graph_order) if full_coeffs[k] == full_coeffs[k + 1]]
+    if equal_adj:
+        raise ArithmeticError(f"equal adjacent nonzero entries at {equal_adj}")
+    turns = []
+    prev_dir = 0
+    for k in range(Q + 1, graph_order):
+        d_dir = 1 if full_coeffs[k + 1] > full_coeffs[k] else -1
+        if prev_dir and d_dir != prev_dir:
+            turns.append(k)
+        prev_dir = d_dir
+    if turns != indices:
+        raise ArithmeticError(f"turning points {turns} != expected {indices}")
+    peaks = [i for i in range(1, graph_order) if full_coeffs[i - 1] < full_coeffs[i] > full_coeffs[i + 1]]
     result = dict(
         m=m,
         p=p,
@@ -205,6 +221,9 @@ def certify(m, p, w, d, Q, indices, output):
         edges=edges,
         variables=nv,
         clauses=c,
+        support=[nz[0], nz[-1]],
+        equal_adjacent_nonzero=equal_adj,
+        turning_points=turns,
         degrees=indices,
         strict_peaks=peaks,
         coefficients=[str(v) for v in vals],
@@ -214,7 +233,11 @@ def certify(m, p, w, d, Q, indices, output):
     with open(output, "w") as f:
         json.dump(result, f, indent=2)
         f.write("\n")
-    print("Integer counts agree. Scaled floors:", scaled, "strict peaks:", peaks, flush=True)
+    print(
+        f"Integer counts agree. Support=[{nz[0]}, {nz[-1]}], equal_adj={equal_adj}, "
+        f"turns={turns}, scaled floors={scaled}, strict peaks={peaks}",
+        flush=True,
+    )
 
 
 if __name__ == "__main__":

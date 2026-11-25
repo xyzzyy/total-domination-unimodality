@@ -8,6 +8,16 @@
   "edges": 41980,
   "variables": 3219,
   "clauses": 19380,
+  "support": [
+    970,
+    22601
+  ],
+  "equal_adjacent_nonzero": [],
+  "turning_points": [
+    11843,
+    11858,
+    11888
+  ],
   "degrees": [
     11843,
     11858,
