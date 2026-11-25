@@ -291,4 +291,6 @@ Several natural questions remain open.
 
 *Code and data availability.* The standalone Lean 4 formalization (`lean/AlikhaniJafari.lean` and modular `lean/AJ/` sources), the Mathlib v4.14.0 bridge (`mathlib/`), the exact rational, FLINT, modular NTT, and CRT verification scripts (`verification/`), and the exact coefficient certificates for $G_1$ and $G_2$ are publicly available at #link("https://github.com/xyzzyy/total-domination-unimodality")[`https://github.com/xyzzyy/total-domination-unimodality`].
 
+*Use of AI tools.* Large language model assistants were used during this work to help explore candidate graph constructions, write verification scripts, assist with the Lean 4 formalization, and edit the exposition. All mathematical claims were checked independently via Lean 4 and exact arithmetic, and the author takes full responsibility for the contents of this paper.
+
 #bibliography("refs.bib", style: "ieee")
