@@ -1,0 +1,26 @@
+{
+  "title": "Counterexamples to the Unimodality of Total Domination Polynomials — Lean 4 Formalization and Verification Code",
+  "upload_type": "software",
+  "creators": [
+    {
+      "name": "MacKenzie, Andrew",
+      "orcid": "0009-0001-3913-4693"
+    }
+  ],
+  "keywords": [
+    "total domination polynomial",
+    "unimodality",
+    "Alikhani-Jafari conjecture",
+    "Lean 4",
+    "graph theory",
+    "combinatorics"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.24519568",
+      "relation": "isSupplementTo",
+      "scheme": "doi",
+      "resource_type": "publication-preprint"
+    }
+  ]
+}

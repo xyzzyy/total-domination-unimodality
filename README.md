@@ -1,8 +1,10 @@
 # Counterexamples to the Unimodality of Total Domination Polynomials
 
+[![Preprint DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24519568.svg)](https://doi.org/10.5281/zenodo.24519568)
+
 Accompanying formalization, exact verification scripts, and coefficient certificates for:
 
-> Andrew MacKenzie, *Counterexamples to the Unimodality of Total Domination Polynomials* (2026).
+> Andrew MacKenzie, *Counterexamples to the Unimodality of Total Domination Polynomials* (2026). Preprint DOI: [10.5281/zenodo.24519568](https://doi.org/10.5281/zenodo.24519568).
 
 This repository disproves Conjecture 2.9 of Alikhani and Jafari (arXiv:1605.02222; *J. Discrete Math. Sci. Cryptogr.* 23(4), 2020) by constructing connected bipartite graphs whose total domination polynomials are not unimodal.
 
