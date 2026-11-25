@@ -66,7 +66,7 @@ In this note we construct a family of connected bipartite graphs whose total dom
 
 = Construction <sec-construction>
 
-Let $m,p >= 1$, $1 <= w <= m$, $d >= 0$, and $q_0, dots, q_(m-1) >= 0$ be integers with $Q = sum_(i=0)^(m-1) q_i >= 1$, and set $P = m p$. We define a graph $G_(w,d)(m,p; bold(q))$, with block indices taken modulo $m$, on the following disjoint vertex sets:
+Let $m,p >= 1$, $1 <= w <= m$, $d >= 0$, and $q_0, dots, q_(m-1) >= 0$ be integers with $Q = sum_(i=0)^(m-1) q_i >= 1$, and set $bold(q) = (q_0, dots, q_(m-1))$ and $P = m p$. We define a graph $G = G_(w,d)(m,p; bold(q))$, with block indices taken modulo $m$, on the following disjoint vertex sets:
 
 - a *hub* $h$ and a pendant *leaf* $ell$ adjacent only to $h$;
 - *variable vertices* $A_(i,a)$, $B_(i,b)$, and $Z_(i,b,e)$ for $i in ZZ_m$, $0 <= a < p$, $0 <= b < q_i$, and $0 <= e < d$, each adjacent to $h$;
@@ -80,7 +80,7 @@ For the analytic proof in Section 3 we specialize to the uniform case $w=3$, $d=
 
 #figure(
   image("construction.svg", width: 91%),
-  caption: [Clause vertices incident to a single switch vertex $B_(i,b)$ in $G(m,2,q)$. The variable vertices $A_(i-s,a)$ belong to blocks $i-2$, $i-1$, and $i$.],
+  caption: [Clause vertices incident to a single variable vertex $B_(i,b)$ in $G(m,2,q)$. The variable vertices $A_(i-s,a)$ belong to blocks $i-2$, $i-1$, and $i$.],
 ) <fig-construction>
 
 #env("Lemma", title: [Characterization of total dominating sets])[
@@ -236,7 +236,7 @@ Taking the trace sums over all cyclic state sequences whose ending state equals 
     [Edges], [41,980], [47,222],
     [Variable vertices $|Vvar|$], [3,219], [3,621],
     [Clause vertices], [19,380], [21,800],
-    [Support $[gamma_t, n]$], [$[970, 22 thin 601]$], [$[1 thin 091, 25 thin 423]$],
+    [Support $[Q+1, n]$], [$[970, 22 thin 601]$], [$[1 thin 091, 25 thin 423]$],
     [Turning points $(k_1, k_2, k_3)$], [$(11 thin 843, 11 thin 858, 11 thin 888)$], [$(13 thin 299, 13 thin 356, 13 thin 380)$],
     [$d_t (G, k_1) slash d_t (G, k_2)$], [1.000236], [1.014411],
     [$d_t (G, k_3) slash d_t (G, k_2)$], [1.001533], [1.001448],
@@ -250,11 +250,11 @@ Taking the trace sums over all cyclic state sequences whose ending state equals 
   caption: [Exact total domination coefficients near the valleys of $G_1$ (left) and $G_2$ (right), normalized by the valley value $d_t (G, k_2)$. Note the different vertical scales.],
 ) <fig-valleys>
 
-Because the coefficients at $(k_1, k_2, k_3)$ have 6,510 and 7,323 decimal digits, we verified Theorem B by dual exact FLINT computations of both full polynomials and cross-checked the six turning-point coefficients via two independent exact pipelines:
+Because the coefficients at $(k_1, k_2, k_3)$ have 6,510 and 7,323 decimal digits, we verified Theorem B by dual exact FLINT computations of both full polynomials and cross-checked the six turning-point coefficients via two independent pipelines:
 
-+ *Dual exact transfer recurrences in FLINT.* Using exact integer polynomial arithmetic via `python-flint` @FLINT, we compute $H(x)$ both by the forward recurrence of @lem-transfer (with states $w-1$ and $w$ merged) and by an independent backward recurrence tracking how many upcoming $A$-blocks are forced full by previously omitted $B$-vertices, multiplying its transfer matrices via divide-and-conquer. Both recurrences match exhaustive $2^n$ subset enumeration on small test graphs and agree identically on $H(x)$ for $G_1$ and $G_2$. Expanding the full product $D_t (G,x) = x(1+x)^C H(x)$ confirms that each polynomial has support $[Q+1, n]$, has no equal adjacent nonzero coefficients, and changes monotonicity direction only at $(k_1, k_2, k_3)$.
-+ *Independent modular NTT check.* A separate pure-Python implementation builds both graphs explicitly, checks simplicity, connectivity, bipartiteness, and absence of isolated vertices, compares evaluations of the transfer formula against exhaustive $2^n$ subset counts modulo $998 thin 244 thin 353$ on seven small instances, and evaluates the target coefficients via a number-theoretic transform modulo the two primes $998 thin 244 thin 353$ and $1 thin 004 thin 535 thin 809$, matching the exact certificates at every entry.
-+ *Exact Chinese remainder reconstruction.* A third independent script (`independent_check.py`) re-verifies graph properties and tests the transfer formula against brute force on ten graphs of order at most $20$. For $G_1$ and $G_2$, it evaluates $H$ at the 4096th roots of unity modulo distinct 31-bit primes congruent to $1 mod 4096$ (756 primes for $G_1$ and 850 primes for $G_2$, whose products exceed $2^(n+64)$). Since $deg(H) = |Vvar| < 4096$, an inverse discrete Fourier transform recovers $H$ modulo each prime, binomial convolution extracts the three target coefficients via @eq-factor, and the Chinese remainder theorem reconstructs the exact integers, confirming all six coefficients and both strict valley inequalities.
++ *Dual exact transfer recurrences in FLINT (`graph_exact.py`).* Using exact integer polynomial arithmetic via `python-flint` @FLINT, we compute $H(x)$ both by the forward recurrence of @lem-transfer (with states $w-1$ and $w$ merged) and by an independent backward recurrence tracking how many upcoming $A$-blocks are forced full by previously omitted $B$-vertices, multiplying its transfer matrices via divide-and-conquer. Both recurrences match exhaustive $2^n$ subset enumeration on small test graphs and agree identically on $H(x)$ for $G_1$ and $G_2$. Expanding the full product $D_t (G,x) = x(1+x)^C H(x)$ confirms that each polynomial has support $[Q+1, n]$, has no equal adjacent nonzero coefficients, and changes monotonicity direction only at $(k_1, k_2, k_3)$.
++ *Independent modular NTT check (`audit_ntt.py`).* A separate pure-Python implementation builds both graphs explicitly, checks simplicity, connectivity, bipartiteness, and absence of isolated vertices, compares evaluations of the transfer formula against exhaustive $2^n$ subset counts modulo $998 thin 244 thin 353$ on seven small instances, and evaluates the target coefficients via a number-theoretic transform modulo the two primes $998 thin 244 thin 353$ and $1 thin 004 thin 535 thin 809$, matching the exact certificates at every entry.
++ *Exact Chinese remainder reconstruction (`independent_check.py`).* A third independent script re-verifies graph properties and tests the transfer formula against brute force on ten graphs of order at most $20$. For $G_1$ and $G_2$, it evaluates $H$ at the 4096th roots of unity modulo distinct 31-bit primes congruent to $1 mod 4096$ (756 primes for $G_1$ and 850 primes for $G_2$, whose products exceed $2^(n+64)$). Since $deg(H) = |Vvar| < 4096$, an inverse discrete Fourier transform recovers $H$ modulo each prime, binomial convolution extracts the three target coefficients via @eq-factor, and the Chinese remainder theorem reconstructs the exact integers, confirming all six coefficients and both strict valley inequalities.
 
 All three counterexamples in Theorems A and B also fail to be log-concave (and hence fail to be real-rooted by Newton’s inequalities). Indeed, every superset of a total dominating set is again a total dominating set, so the indices of the nonzero coefficients of $D_t (G,x)$ form an interval of consecutive integers; any nonnegative log-concave sequence with contiguous support is necessarily unimodal.
 
@@ -264,7 +264,7 @@ To verify the combinatorial reduction and establish the non-unimodality of $G(18
 
 A finite simple graph on `Fin N` is represented by a symmetric, irreflexive Boolean adjacency function, with connectivity defined via walks, bipartiteness via a proper two-coloring, and `HasNoIsolated` requiring a neighbor for every vertex. The predicate `IsTotalDom G S` checks that every vertex has an adjacent vertex in `S`, and `totalDomCount G k` is defined directly as the count of subsets of cardinality `k` in an explicit, proven-exhaustive, duplicate-free enumeration of all $2^N$ Boolean vectors on `Fin N`. Unimodality (`IsUnimodal f`) is defined as the absence of a strict valley (`min (f i) (f k) ≤ f j` for all `i < j < k`), which is equivalent to standard unimodality for sequences of natural numbers with finite support.
 
-The proof mirrors Section 3 across eight modules: `Basic` (list counting, bijections, binomial identities, and pure-`Nat` inequalities), `Graph` (the inductive vertex type `Vtx`, `ringGraph`, and @lem-graph), `Config` and `Bridge` (the exact factorization into hub, free vertices, and valid variable configurations, proving @lem-tds), `Families` (the lower bounds $B_1, B_3$ and Chernoff upper bounds $U_1, U_2$), `Mixed` (@lem-mixed), `Numerics` (exact integer certification of the strict valley inequalities), and `Main`, which assembles the top-level theorem:
+The proof mirrors Section 3 across eight modules: `Basic` (list counting, bijections, binomial identities, and pure-`Nat` inequalities), `Graph` (the inductive vertex type `Vtx`, `ringGraph`, and @lem-graph), `Config` and `Bridge` (the exact factorization into hub, free vertices, and valid variable configurations, proving @lem-tds), `Families` (the peak lower bounds, the valley decomposition into $U_1 + U_2 + U_3$, and the Chernoff bound for $U_2$), `Mixed` (@lem-mixed), `Numerics` (exact integer certification of the strict valley inequalities), and `Main`, which assembles the top-level theorem:
 
 #block(inset: (left: 0.75em))[
   #set text(size: 8.6pt)
